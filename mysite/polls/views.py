@@ -1,10 +1,11 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 
-from django.http import HttpResponse
-from django.template import loader
+from django.http import HttpResponse, HttpResponseRedirect
+from django.template import loader ##you can get rid of these two lines once everything is using render instead of HttpResponse
 
-from .models import Question
+from .models import Choice, Question
 
 ##TEMPLATE EXAMPLE:
 
@@ -35,8 +36,29 @@ def detail(request, question_id):
 
 
 def results(request, question_id):
-    return HttpResponse(f"You're looking at the results of question {question_id}")
+    question = get_object_or_404(Question, pk=question_id)
+    return render(request, "polls/results.html", {"question": question})
+
 
 
 def vote(request, question_id):
-    return HttpResponse(f"You're voting on question {question_id}")
+    question = get_object_or_404(Question, pk=question_id)
+    try:
+        selected_choice = question.choice_set.get(pk=request.POST["choice"])
+    except (KeyError, Choice.DoesNotExist):
+        #Redisplay the voting form:
+        return render(
+            request,
+            "polls/detail.html",
+            {
+                "question": question,
+                "error_messge": "You didn't select a choice."
+            }
+        )
+    else:
+        selected_choice.votes += 1
+        selected_choice.save()
+
+    return HttpResponseRedirect(reverse("polls:results", args=(question_id,)))
+    ##redirect to the 'results' view--look into using reverse() in this manner 
+    ##(you could test this by removing reverse() and seeing what happens
