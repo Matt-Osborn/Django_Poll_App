@@ -1,0 +1,14 @@
+li a {
+    color:green;
+}
+
+body {
+
+    background:white url("images/greenFlipped7.jpg") no-repeat; 
+}
+
+/* You need to change that image name and clean up the image folder */
+
+/* attribution for image:  (put this in the index.html file or the footer template if you make one) */
+
+/* <a href="https://www.freepik.com/free-vector/green-geometric-frame_16326569.htm#page=3&query=website%20background%20images%20green&position=9&from_view=search&track=ais">Image by rawpixel.com</a> on Freepik */
